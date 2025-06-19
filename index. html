@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gowri's Enchanted Gift</title>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&family=Pacifico&display=swap" rel="stylesheet">
+  <style>
+    /* General Styles */
+    body {
+      font-family: 'Quicksand', sans-serif;
+      background: linear-gradient(to bottom right, #fcefee, #f3e8ff); 
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      color: #4b2e83;
+    }
+
+    h1, h2 {
+      font-family: 'Pacifico', cursive;
+      text-align: center;
+      color: #d63384;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .card {
+      background: #fffaf0;
+      border-radius: 20px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      margin-bottom: 30px;
+      position: relative;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      border-radius: 10px;
+      border: 2px solid #ddd;
+      margin-top: 10px;
+      font-size: 1em;
+    }
+
+    button.button {
+      background: #ffe6ff;
+      border: none;
+      padding: 10px 20px;
+      margin: 5px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: bold;
+    }
+
+    button.button:hover {
+      background: #ffc2f0;
+      transform: scale(1.05);
+    }
+
+    .quote-card {
+      font-style: italic;
+      font-size: 1.2em;
+      text-align: center;
+      padding: 15px;
+      border-left: 4px solid #d63384;
+      margin: 20px 0;
+    }
+
+    .trait-message {
+      background: #fff;
+      padding: 10px 15px;
+      border-radius: 10px;
+      margin: 10px 0;
+      border-left: 4px solid #9d4edd;
+    }
+
+    .cursor-trail {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    .trail-dot {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background-color: #ffb3ff;
+      border-radius: 50%;
+      opacity: 0.6;
+      animation: fadeOut 1s ease-in-out forwards;
+    }
+
+    @keyframes fadeOut {
+      from { opacity: 0.6; }
+      to { opacity: 0; transform: scale(0.5); }
+    }
+
+    .confetti {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background-color: #ffccff;
+      animation: confetti-fall 5s linear infinite;
+    }
+
+    @keyframes confetti-fall {
+      0% { transform: translateY(-100%) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Section 1: Unlock -->
+  <div id="unlock-section" class="card">
+    <h1>🎁 Gowri's Enchanted Gift 🎁</h1>
+    <p>Enter a magical name to unlock your surprise...</p>
+    <input type="text" id="name-input" placeholder="e.g., Gowri or Madam Ji">
+    <button class="button" onclick="unlockGift()">Unlock Gift</button>
+  </div>
+
+  <!-- Section 2: Letter -->
+  <div id="letter-section" class="card" style="display:none;">
+    <h2>A Personal Note For You</h2>
+    <p>Dear Gowri,</p>
+    <p>You're not just my best friend — you're my favorite artist, my laughter, my sunshine in every season. I hope this little enchanted box makes you smile as much as you make me smile every day.</p>
+    <p>Thank you for being the creative soul that inspires everyone around you 💖</p>
+  </div>
+
+  <!-- Section 3: Quote Carousel -->
+  <div id="quote-section" class="card" style="display:none;">
+    <h2>✨ Your Daily Dose of Love ✨</h2>
+    <div id="quote-display" class="quote-card"></div>
+    <button class="button" onclick="anotherOne()">🔁 Another One!</button>
+    <button class="button" onclick="saveSnap()">💾 Save Snap</button>
+  </div>
+
+  <!-- Section 4: Acrostic Traits -->
+  <div id="trait-section" class="card" style="display:none;">
+    <h2>✨ Your Magical Traits ✨</h2>
+    <p>Type any letter from GOWRI or MADAM JI to reveal something special about YOU:</p>
+    <input type="text" id="trait-input" placeholder="e.g., G, O, W...">
+    <div id="trait-messages"></div>
+  </div>
+
+  <!-- Section 5: Compliment Generator -->
+  <div id="compliment-section" class="card" style="display:none;">
+    <h2>💖 Mood Magic Compliments 💖</h2>
+    <select id="mood-select">
+      <option value="">Choose your mood...</option>
+      <optgroup label="🌞 Positive Moods">
+        <option value="happy">Happy – Light-hearted, joyful, content</option>
+        <option value="excited">Excited – Pumped up, energetic, can't-sit-still vibes</option>
+        <option value="grateful">Grateful – Thankful and warm inside</option>
+        <option value="inspired">Inspired – Motivated, creative juices flowing</option>
+        <option value="loved">Loved – Feeling cared for or in love</option>
+        <option value="peaceful">Peaceful – Calm, relaxed, zen mode on</option>
+        <option value="playful">Playful – Cheeky, silly, ready to joke</option>
+        <option value="proud">Proud – Accomplished, self-confident</option>
+        <option value="romantic">Romantic – Lovey-dovey, dreamy, soft music mode</option>
+        <option value="hopeful">Hopeful – Optimistic and forward-looking</option>
+      </optgroup>
+      <optgroup label="🌧️ Low or Sad Moods">
+        <option value="sad">Sad – Feeling blue or melancholic</option>
+        <option value="lonely">Lonely – Missing someone or longing for connection</option>
+        <option value="disappointed">Disappointed – Let down, discouraged</option>
+        <option value="heartbroken">Heartbroken – Post-breakup or emotional hurt</option>
+        <option value="anxious">Anxious – Nervous or worried</option>
+        <option value="overwhelmed">Overwhelmed – Too much to handle</option>
+        <option value="frustrated">Frustrated – Stuck or blocked</option>
+        <option value="tired">Tired – Exhausted or drained</option>
+        <option value="insecure">Insecure – Doubting oneself</option>
+        <option value="numb">Numb – Feeling nothing or emotionally flat</option>
+      </optgroup>
+      <optgroup label="🔥 Intense / Complex Moods">
+        <option value="angry">Angry – Fired up, irritable</option>
+        <option value="jealous">Jealous – Feeling envious or left out</option>
+        <option value="rebellious">Rebellious – Rule-breaking, edgy mood</option>
+        <option value="nostalgic">Nostalgic – Missing the past, sentimental</option>
+        <option value="confused">Confused – Unsure or conflicted</option>
+        <option value="determined">Determined – Laser-focused, mission mode</option>
+        <option value="focused">Focused – In the zone, tunnel vision</option>
+        <option value="moody">Moody – Switching between emotions quickly</option>
+        <option value="empowered">Empowered – Bold, fearless, confident</option>
+        <option value="melancholic">Melancholic – Romantic sadness or sweet sorrow</option>
+      </optgroup>
+      <optgroup label="💫 Aesthetic / Vibe Moods">
+        <option value="dreamy">Dreamy – Soft colors, fantasy feel</option>
+        <option value="cozy">Cozy – Warm, homey, safe</option>
+        <option value="dark">Dark – Brooding, mysterious, shadowy</option>
+        <option value="vintage">Vintage – Old-school, retro emotions</option>
+        <option value="chill">Chill – Laid-back, relaxed, lo-fi vibes</option>
+        <option value="whimsical">Whimsical – Light, magical, fairy-tale</option>
+        <option value="bold">Bold – Loud, expressive, dramatic</option>
+        <option value="mystical">Mystical – Deep, spiritual, enchanting</option>
+        <option value="minimal">Minimal – Calm, clean, emotionally light</option>
+        <option value="royal">Royal – Elegant, classy, majestic</option>
+      </optgroup>
+    </select>
+    <button class="button" onclick="getCompliment()">✨ Get Compliment</button>
+    <div id="compliment-display" class="quote-card"></div>
+  </div>
+
+  <!-- Back Button -->
+  <button class="button" onclick="goBack()" style="display:none;" id="back-btn">↤ Back to Start</button>
+
+</div>
+
+<!-- Cursor Trail -->
+<div id="cursor-trail" class="cursor-trail"></div>
+
+<!-- Confetti Container -->
+<div id="confetti-container"></div>
+
+<script>
+  const validNames = ["Gowri", "Madam Ji"];
+  let quoteIndex = 0;
+  let currentBrushColor = "black";
+  let isDrawing = false;
+  let lastX = 0;
+  let lastY = 0;
+
+  // Quotes
+  const quotes = [
+    "You’re like WiFi, Madam Ji — I don’t always see you, but I feel your connection everywhere 😌📶💗",
+    "You’re not just my best friend... you’re my favorite human in HD resolution 🎬👩‍💻💫",
+    "If I had a star for every time you made me smile, I’d own the whole galaxy 🌌🌟💖",
+    "We’re not just best friends — we’re two peas in a meme 🫛💬🤣",
+    "Your vibe is softer than a marshmallow and warmer than a hoodie on a cold day ☁️💞🧥",
+    "Some people have sisters by blood. I got one by bond 💕🔐💌",
+    "You're the playlist to my silence, the sparkle to my dull days 🎧💫🌻",
+    "You walk in like sunshine, talk like a lullaby, and laugh like magic 🌞🎶✨",
+    "Behind every successful idiot (me) is a genius best friend (you) 👑🧠💅",
+    "Madam Ji, you’re the human version of a comfort zone 🧸🛋️❤️",
+    "Best friends like you don’t come with a price tag — they come with memes, madness, and mid-night cravings 🍟🎉📱",
+    "You’re the ‘What are you doing?’ text at 2AM I actually enjoy 😴📲💕",
+    "You add sparkle to the ordinary, chaos to boredom, and chill to my anxiety 💖🥶💫",
+    "Our friendship is like a rare Pokémon — legendary, powerful, and slightly dramatic 😜🔮🦄",
+    "If I had to choose between you and chocolate... I’d miss you dearly 🍫😅💔"
+  ];
+
+  // Traits
+  const traits = {
+    G: "Glimmer of joy in every room she enters 🌟",
+    O: "One of a kind, seriously no copy-paste allowed 🧬",
+    W: "Witty and wild, the perfect mix of brains and fun 😜",
+    R: "Radiates good vibes, even on stormy days ☀️",
+    I: "Inspires effortlessly, just by being herself 🌻",
+    M: "Magnetic personality – people just love being around her ✨",
+    A: "Authentic always, no filters needed – just 100% real ❤️",
+    D: "Dreamer and doer, no lazy vibes, just bold moves 💪",
+    A2: "Adds sparkle to the dullest days like confetti 🎉",
+    M2: "Mood maker, turns silence into laughter in seconds 😄",
+    J: "Jokes hit different, her humor's got its own fanbase 😆",
+    I2: "Irreplaceable, there's truly no second 'Madam Ji' 💯"
+  };
+
+  function unlockGift() {
+    const name = document.getElementById("name-input").value.trim();
+    if (validNames.includes(name)) {
+      showAllSections();
+      confettiAnimation();
+    } else {
+      alert("Oops! Try a more magical name!");
+    }
+  }
+
+  function showAllSections() {
+    document.getElementById("unlock-section").style.display = "none";
+    document.querySelectorAll(".card").forEach(c => c.style.display = "block");
+    document.getElementById("back-btn").style.display = "inline-block";
+    updateQuoteDisplay();
+  }
+
+  function goBack() {
+    document.getElementById("unlock-section").style.display = "block";
+    document.querySelectorAll(".card").forEach(c => c.style.display = "none");
+    document.getElementById("back-btn").style.display = "none";
+  }
+
+  function anotherOne() {
+    quoteIndex = (quoteIndex + 1) % quotes.length;
+    updateQuoteDisplay();
+  }
+
+  function updateQuoteDisplay() {
+    document.getElementById("quote-display").innerText = quotes[quoteIndex];
+  }
+
+  function saveSnap() {
+    navigator.clipboard.writeText(quotes[quoteIndex]).then(() => {
+      alert("Quote copied to clipboard! Paste it somewhere safe 💾");
+    });
+  }
+
+  document.getElementById("trait-input").addEventListener("input", () => {
+    const input = document.getElementById("trait-input").value.toUpperCase();
+    const msgDiv = document.getElementById("trait-messages");
+    msgDiv.innerHTML = "";
+    [...input].forEach(char => {
+      const trait = traits[char] || "Hmm... that letter isn't part of your magic!";
+      const div = document.createElement("div");
+      div.className = "trait-message";
+      div.innerText = `${char}: ${trait}`;
+      msgDiv.appendChild(div);
+    });
+  });
+
+  function getCompliment() {
+    const mood = document.getElementById("mood-select").value;
+    const compliments = {
+      happy: "You're radiating happiness today! Keep shining bright!",
+      excited: "Your energy is contagious—can't wait to see what you achieve next!",
+      grateful: "Being grateful is such a beautiful trait—you inspire others to be thankful too.",
+      inspired: "Your motivation is infectious! Keep creating magic.",
+      loved: "Feeling loved is the best feeling ever. You deserve all the love in the world!",
+      peaceful: "Zen mode activated! Stay calm and centered.",
+      playful: "Your sense of humor lights up the room. Keep being cheeky and fun!",
+      proud: "You've accomplished so much—be proud of yourself!",
+      romantic: "Dreamy and lovely—your romantic side is enchanting.",
+      hopeful: "Optimism is key! Keep looking forward to brighter days.",
+      sad: "It's okay to feel sad sometimes. Remember, you're not alone.",
+      lonely: "Missing someone? Reach out—they care about you too.",
+      disappointed: "Disappointment happens, but don't lose hope. You'll bounce back stronger.",
+      heartbroken: "Healing takes time. Lean on your friends and family.",
+      anxious: "Take deep breaths and focus on what you can control.",
+      overwhelmed: "Break tasks into smaller steps—it gets easier.",
+      frustrated: "Stay patient—things will clear up soon.",
+      tired: "Rest is important. Take a break and recharge.",
+      insecure: "You're amazing just the way you are—believe in yourself!",
+      numb: "Emotions will return. Focus on small joys in life.",
+      angry: "Let out your anger in healthy ways—journal, exercise, or talk it out.",
+      jealous: "Comparison is the thief of joy. Focus on your own journey.",
+      rebellious: "Channel your edginess into creativity and innovation.",
+      nostalgic: "Remembering the past is beautiful—cherish those memories.",
+      confused: "Take time to reflect. Everything will become clearer.",
+      determined: "Your determination is unstoppable—keep pushing forward!",
+      focused: "In the zone? Keep going—you're making great progress.",
+      moody: "Emotions change—embrace them and find balance.",
+      empowered: "You're unstoppable! Keep owning your power.",
+      melancholic: "Sweet sorrow is part of life—let it inspire your art and creativity.",
+      dreamy: "Dream big! Your imagination is limitless.",
+      cozy: "Coziness is comforting—wrap yourself in warmth and love.",
+      dark: "Darkness has beauty—embrace your brooding side.",
+      vintage: "Old-school vibes are timeless—celebrate your nostalgia.",
+      chill: "Chill mode is perfect—relax and enjoy the moment.",
+      whimsical: "Magic is real—live in your fairy-tale world.",
+      bold: "Express yourself loudly and proudly!",
+      mystical: "Spirituality is powerful—trust your inner wisdom.",
+      minimal: "Less is more—find peace in simplicity.",
+      royal: "Elegance is in your DNA—shine brightly!"
+    };
+    const compliment = compliments[mood];
+    document.getElementById("compliment-display").innerText = compliment;
+  }
+
+  function confettiAnimation() {
+    const container = document.getElementById("confetti-container");
+    container.innerHTML = '';
+    for (let i = 0; i < 100; i++) {
+      const c = document.createElement("div");
+      c.className = "confetti";
+      c.style.left = Math.random() * 100 + "%";
+      c.style.top = Math.random() * -100 + "px";
+      c.style.animationDuration = Math.random() * 2 + 1 + "s";
+      c.style.backgroundColor = `hsl(${Math.random()*360}, 100%, 70%)`;
+      container.appendChild(c);
+    }
+  }
+
+  // Sparkle Cursor Trail
+  document.addEventListener("mousemove", e => {
+    const dot = document.createElement("div");
+    dot.className = "trail-dot";
+    dot.style.left = e.clientX + "px";
+    dot.style.top = e.clientY + "px";
+    document.getElementById("cursor-trail").appendChild(dot);
+    setTimeout(() => dot.remove(), 1000);
+  });
+</script>
+
+</body>
+</html>
